@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python -u main_pose.py --save_dir './models/new_pose_cat_64/'  --feature_dir '/export/home/zm/test/icme2019/SR_PIPA/feature/PIPA_feature/'  --val_step 1  --batch_size 64 --

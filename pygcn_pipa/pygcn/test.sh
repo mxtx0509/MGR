@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=2 python -u test.py   --feature_dir '/export/home/zm/test/icme2019/SR_PIPA/feature/PIPA_feature/' --weights './models/3000_SGD_perobjpose_67/59.440model_best.pth.tar'  

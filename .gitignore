@@ -5,6 +5,7 @@ reated by .ignore support plugin (hsz.mobi)
 # Django stuff:
 *.log
 *.pth
+*.txt
 *.jpg
 *.png
 *.npy
