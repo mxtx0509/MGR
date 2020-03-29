@@ -6,8 +6,6 @@ reated by .ignore support plugin (hsz.mobi)
 *.log
 *.pth
 *.txt
-*.jpg
-*.png
 *.npy
 *.json
 *.pyc
