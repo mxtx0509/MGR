@@ -1,1 +1,0 @@
-CUDA_VISIBLE_DEVICES=2 python -u main.py --save_dir './models/SGD_per_obj_128/'  --feature_dir '/export/home/zm/test/icme2019/SR_PIPA/feature/PIPA_feature/'  --val_step 1 --graph_mode 'per_obj' --batch_size 128

@@ -1,1 +1,0 @@
-CUDA_VISIBLE_DEVICES=1 python -u main.py --save_dir './models_new/fc_per_obj_1/'  --feature_dir '/export/home/zm/test/icme2019/SR_graph/feature/PISC_fine_32/'  --val_step 1 --batch_size 128 --print_freq 8

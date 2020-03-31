@@ -7,14 +7,9 @@ from torch.nn.parameter import Parameter
 import math
 
 class GCN(nn.Module):
-    def __init__(self, adj_size, nfeat, nhid, nclass, dropout):
+    def __init__(self, nfeat, nhid, nclass, dropout):
         super(GCN, self).__init__()
-
-        self.adj_size = adj_size
-        nhid = 1024    
-        nfeat= 2048   
-
-        self.gc1 = GraphConvolution(2048, nhid ,8)
+        self.gc1 = GraphConvolution(nfeat, nhid ,8)
         self.gc3 = GraphConvolution(nhid, 512,8)
         
         self.gc1_pose = GraphConvolution(90, 512 ,34)

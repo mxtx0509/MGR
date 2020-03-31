@@ -34,81 +34,65 @@ model_names = sorted(name for name in models.__dict__
 parser = argparse.ArgumentParser(description='PyTorch Relationship')
 parser.add_argument('--start_epoch',  default=0, type=int, metavar='N',
                     help='mini-batch size (default: 1)')
-parser.add_argument('--result_path', default='./result/', type=str, metavar='PATH', #model_best.pth.tar
+parser.add_argument('--weights', default='', type=str, metavar='PATH', #model_best.pth.tar
                     help='path to weights (default: none)')
-parser.add_argument('--weights', default='./checkpoints/3000_SGD_noshuffle_new/26_checkpoint_ep26.pth.tar', type=str, metavar='PATH', #model_best.pth.tar
-                    help='path to weights (default: none)')   
 parser.add_argument('--write_out',default=True, type=int,
                     help='val step')
-parser.add_argument('--val_step',default=1, type=int,
+parser.add_argument('--val_step',default=2, type=int,
                     help='val step')
 parser.add_argument('--num_class',default=6, type=int,
                     help='num_class')
 parser.add_argument('--save_dir',default='./checkpoints/pose_1128/', type=str, 
                     help='save_dir')
-parser.add_argument('--feature_dir',default='./checkpoints/pose_1128/', type=str, 
-                    help='save_dir')
-parser.add_argument('--graph_mode',default='pose', type=str,
-                    help='mode')
 parser.add_argument('--num_gpu', default=1, type=int, metavar='PATH',
                     help='path for saving result (default: none)')
-parser.add_argument('--print_freq', default=1000, type=int, metavar='PATH',
+parser.add_argument('--print_freq', default=16, type=int, metavar='PATH',
                     help='path for saving result (default: none)')
-parser.add_argument('--test_mode', default=True, type=bool, metavar='PATH',
-                    help='path for saving result (default: none)')
-parser.add_argument('--epochs', type=int, default=150,
+parser.add_argument('--epochs', type=int, default=400,
                     help='Number of epochs to train.')
 parser.add_argument('--lr', type=float, default=0.001,
                     help='Initial learning rate.')
-# parser.add_argument('--weight_decay', type=float, default=5e-4,
-                    # help='Weight decay (L2 loss on parameters).')
-parser.add_argument('--hidden', type=int, default=512,
-                    help='Number of hidden units.')
-parser.add_argument('--batch_size', type=int, default=1,
-                    help='Number of hidden units.')
-parser.add_argument('--tag', type=int, default=1,
-                    help='Number of hidden units.')
-parser.add_argument('--threshold', type=float, default=0.12,
-                    help='Number of hidden units.')
+parser.add_argument('--batch_size', type=int, default=64,
+                    help='Number of batch_size.')
 parser.add_argument('--workers', type=int, default=4,
-                    help='Number of hidden units.')
+                    help='.')
 parser.add_argument('--dropout', type=float, default=0.5,
                     help='Dropout rate (1 - keep probability).')
-                    
+################################################################################
+parser.add_argument('--train_list',default='./', type=str, 
+                    help='train_list')
+parser.add_argument('--test_list',default='./', type=str, 
+                    help='test_list')
+parser.add_argument('--fea_obj_dir',default='./', type=str, 
+                    help='fea_obj_dir')
+parser.add_argument('--fea_person_dir',default='./', type=str, 
+                    help='fea_person_dir')
+parser.add_argument('--fea_pose_dir',default='./', type=str, 
+                    help='fea_pose_dir')
+parser.add_argument('--graph_perobj_dir',default='./', type=str, 
+                    help='graph_perobj_dir')
+parser.add_argument('--graph_pose_dir',default='./', type=str, 
+                    help='graph_pose_dir')
 
+best_prec1 = 0
 best_prec1 = 0
 
 def get_loader(adj_dir, feature_dir,SIZE):
-    test_list = '/export/home/zm/test/icme2019/SR_graph/list/PISC_fine_test.txt'
-
-    test_set = SRDataset(adj_dir, feature_dir=feature_dir, file_list = test_list,adj_size=SIZE,graph_mode=args.graph_mode,is_train= False)
+    test_list = args.test_list  #'/export/home/zm/test/icme2019/SR_graph/list/PISC_fine_test.txt'
+    test_set = SRDataset(args, file_list = test_list,is_train=False)
     test_loader = DataLoader(dataset=test_set, num_workers=args.workers,
                             batch_size=args.batch_size, shuffle=False)
-    return  test_loader
+    return test_loader
 def main():
-    SIZE = 8
     global args, best_prec1
     args = parser.parse_args()
     print (args)
     best_acc = 0 
-    tag = int(args.threshold * 100)
-    # Create dataloader
-    print ('====> Creating dataloader...')
-    if not os.path.exists(args.save_dir) :
-        os.makedirs(args.save_dir)
-    if args.graph_mode == 'pose' :
-        adj_dir = './%s_graph_1.npy'%args.graph_mode
-    elif args.graph_mode == 'pose_obj':
-        adj_dir = './%s_graph_1.npy'%args.graph_mode
-    else:
-        print ('arg.graph_mode input wrong!!!!!')
     feature_dir = args.feature_dir
     test_loader = get_loader(adj_dir, feature_dir,SIZE)
-
-
     # load network
     print ('====> Loading the network...')
-    model = GCN(adj_size=SIZE,nfeat=256,nhid=args.hidden,nclass=6,dropout=args.dropout)
+    model = GCN(nfeat=2048,nhid=1024,nclass=arg.num_class,dropout=args.dropout) 
     print (model)   
     # print model
     
@@ -122,8 +106,6 @@ def main():
         else:
             print("====> no pretrain model at '{}'".format(args.weights))
     
-    # model.fg = torch.nn.DataParallel(model.fg)
-    # model.full_im_net = torch.nn.DataParallel(model.full_im_net)
     model = torch.nn.DataParallel(model)
     model.cuda()
 

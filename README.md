@@ -42,11 +42,21 @@ PyTorch 0.3
 
 ### Training
 
-Train PersonPair_Union model[6] to extract person node feature as .
+#### Feature Extraction
 
-The code references git https://github.com/wzhouxiff/SR.git
+1. Train PersonPair_Union model[6] to extract person node feature.
 
+​        The code references git https://github.com/wzhouxiff/SR.git
 
+2. Extract object node feature though Mask RCNN
+
+​       The code references git https://github.com/open-mmlab/mmdetection.git
+
+3. Extract pose node feature though SimpleBaseline
+
+   The code references git <https://github.com/microsoft/human-pose-estimation.pytorch>
+
+GCN 
 
 
 
